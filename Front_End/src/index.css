@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input-form {
+  @apply bg-blue-50 text-black focus:outline-none placeholder-purple-100 font-normal p-5 rounded-lg;
+}
+.text-dark {
+  @apply dark:text-white dark:bg-slate-900 transition duration-500;
+}
+.btn-form {
+  @apply text-white w-full flex align-middle justify-center bg-purple-300 shadow-lg shadow-purple-300/50 py-4 rounded-lg;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}

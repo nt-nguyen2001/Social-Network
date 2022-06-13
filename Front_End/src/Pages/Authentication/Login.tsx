@@ -11,7 +11,7 @@ import Bottom from './Bottom';
 import Header from './Header';
 
 function Login(): JSX.Element {
-  const [isDarkMode, toggleDarkMode] = useDarkMode();
+  const [themeMode, toggleDarkMode] = useDarkMode();
   const { data, handleChange, handleBlur, errors, handleCheckEmpty } = useFormValidation<User>({
     validations: {
       account: {
@@ -67,7 +67,11 @@ function Login(): JSX.Element {
   }, []);
 
   return (
-    <section className=" pt-4 h-full overflow-hidden text-dark">
+    <section
+      className={`pt-4 h-full overflow-hidden text-dark ${
+        (themeMode.isTransition && 'transition duration-500') || ''
+      }`}
+    >
       <section className="font-Poppins pb-12 mx-4 md:mx-8 xl:mx-44 lg:flex lg:h-screen ">
         <div className="flex justify-between gap-4">
           <div className="font-semibold text-lg">Your Logo</div>

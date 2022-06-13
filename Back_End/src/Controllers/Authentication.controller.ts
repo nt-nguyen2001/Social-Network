@@ -3,7 +3,10 @@ import jwt from "jsonwebtoken";
 import { User } from "../Types/User.interface";
 
 export function login(req: Request, res: Response) {
-  const { account = "", password = "" }: User = req.body.payload;
+  const { account, password }: User = req.body.payload || {
+    account: "",
+    password: "",
+  };
   res.sendStatus(400);
 }
 
@@ -15,7 +18,7 @@ export async function register(req: Request, res: Response) {
       expires: new Date(Date.now() + 900000),
       httpOnly: true,
     })
-    .end();
+    .sendStatus(200);
 }
 
 export function refreshToken(req: Request, res: Response) {

@@ -12,10 +12,10 @@ export interface User {
   phoneNumber: string;
 }
 
-export interface FetchResponse<T> {
-  data: T[];
-  totalPages: number;
-}
+// export interface FetchResponse<T> {
+//   data: T[];
+//   totalPages: number;
+// }
 
 export interface Validation {
   required?: {

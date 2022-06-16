@@ -1,8 +1,9 @@
 import { FormEvent, useEffect } from 'react';
-import { BsFillSunFill } from 'react-icons/bs';
+import { BsFillSunFill, BsMoonStarsFill } from 'react-icons/bs';
 import { useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { loginAPI, RefreshToken } from '../../Api/Authentication.api';
+import { getUser } from '../../Api/User.api';
 import useDarkMode from '../../Hooks/useDarkMode';
 import useFormValidation from '../../Hooks/useFormValidation';
 import { User } from '../../Models';
@@ -76,14 +77,21 @@ function Login(): JSX.Element {
         <div className="flex justify-between gap-4">
           <div className="font-semibold text-lg">Your Logo</div>
           <div>
-            <BsFillSunFill
-              className="text-2xl cursor-pointer"
-              onClick={toggleDarkMode}
-              color="#e9c46a"
-            />
+            {(themeMode.darkMode && (
+              <BsFillSunFill
+                className="text-2xl cursor-pointer"
+                onClick={toggleDarkMode}
+                color="#e9c46a"
+              />
+            )) || (
+              <BsMoonStarsFill
+                className="text-xl cursor-pointer"
+                onClick={toggleDarkMode}
+                color="#e9c46a"
+              />
+            )}
           </div>
         </div>
-
         <section className="lg:flex lg:flex-row lg:items-center mt-10 gap-10 flex-1 ">
           <Header type="Register" path="/Register" />
           <form className="flex-1" onSubmit={handleSubmit}>

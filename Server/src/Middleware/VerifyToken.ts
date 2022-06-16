@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+
 interface TokenInterface {
   name: string;
   message: string;
   expiredAt: number;
 }
-let a = 1;
-console.log(a);
+
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
   const token =
-    req.cookies.authorization && req.cookies.authorization.split(" ")[1];
+    req.cookies.accessToken && req.cookies.accessToken.split(" ")[1];
   const secret_key: string = process.env.SECRET_KEY || "ASD";
   try {
     jwt.verify(token, secret_key);

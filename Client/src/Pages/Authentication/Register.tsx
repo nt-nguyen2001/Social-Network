@@ -1,5 +1,5 @@
 import React, { FormEvent } from 'react';
-import { BsFillSunFill } from 'react-icons/bs';
+import { BsFillSunFill, BsMoonStarsFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { registerAPI } from '../../Api/Authentication.api';
@@ -35,7 +35,7 @@ const inputArray: Input[] = [
 ];
 
 function Register(): JSX.Element {
-  const [isDarkMode, toggleDarkMode] = useDarkMode();
+  const [themeMode, toggleDarkMode] = useDarkMode();
   const navigate = useNavigate();
   const { data, handleChange, handleBlur, errors, setErrors, handleCheckEmpty } =
     useFormValidation<User>({
@@ -74,11 +74,19 @@ function Register(): JSX.Element {
         <div className="flex justify-between gap-4">
           <div className="font-semibold text-lg ">Your Logo</div>
           <div>
-            <BsFillSunFill
-              className="text-2xl cursor-pointer"
-              color="#e9c46a"
-              onClick={toggleDarkMode}
-            />
+            {(themeMode.darkMode && (
+              <BsFillSunFill
+                className="text-2xl cursor-pointer"
+                onClick={toggleDarkMode}
+                color="#e9c46a"
+              />
+            )) || (
+              <BsMoonStarsFill
+                className="text-xl cursor-pointer"
+                onClick={toggleDarkMode}
+                color="#e9c46a"
+              />
+            )}
           </div>
         </div>
         <section className="lg:flex lg:flex-row lg:items-center mt-10 gap-10 flex-1 ">

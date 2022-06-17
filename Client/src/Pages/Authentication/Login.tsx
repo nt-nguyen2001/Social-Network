@@ -1,4 +1,4 @@
-import { FormEvent, useEffect } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { BsFillSunFill, BsMoonStarsFill } from 'react-icons/bs';
 import { useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -8,12 +8,13 @@ import useDarkMode from '../../Hooks/useDarkMode';
 import useFormValidation from '../../Hooks/useFormValidation';
 import { User } from '../../Models';
 import { config } from '../../Utils/toast.config';
+import LoadingTop from '../Loading/Top';
 import Bottom from './Bottom';
 import Header from './Header';
 
 function Login(): JSX.Element {
   const [themeMode, toggleDarkMode] = useDarkMode();
-  const { data, handleChange, handleBlur, errors, handleCheckEmpty } = useFormValidation<User>({
+  const { data, handleChange, handleValidate, errors } = useFormValidation<User>({
     validations: {
       account: {
         required: {
@@ -34,21 +35,24 @@ function Login(): JSX.Element {
     },
   });
   const { state } = useLocation() as { state: { success?: boolean } };
+  const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (handleCheckEmpty() !== false) {
-      loginAPI(data)
-        .then((res) => res?.json())
-        .then((res) => {
-          switch (res?.message) {
-            case 'Bad Request':
-              toast.error('The user name or password is incorrect', config);
-              break;
-            case 'Expired':
-              RefreshToken();
-              break;
-          }
-        });
+    if (handleValidate()() === true) {
+      // loginAPI(data)
+      //   .then((res) => res?.json())
+      //   .then((res) => {
+      //     switch (res?.message) {
+      //       case 'Bad Request':
+      //         toast.error('The user name or password is incorrect', config);
+      //         break;
+      //       case 'Expired':
+      //         RefreshToken();
+      //         break;
+      //     }
+      //   });
+      console.log('?');
+      setIsLoading(true);
     }
   };
 
@@ -73,6 +77,8 @@ function Login(): JSX.Element {
         (themeMode.isTransition && 'transition duration-500') || ''
       }`}
     >
+      {/* {isLoading && <LoadingTop />} */}
+      <LoadingTop />
       <section className="font-Poppins pb-12 mx-4 md:mx-8 xl:mx-44 lg:flex lg:h-screen ">
         <div className="flex justify-between gap-4">
           <div className="font-semibold text-lg">Your Logo</div>
@@ -103,7 +109,7 @@ function Login(): JSX.Element {
                     type="text"
                     placeholder="Enter email or user name"
                     onChange={handleChange('account')}
-                    onBlur={handleBlur('account')}
+                    onBlur={handleValidate('account')}
                     className="input-form"
                   />
                   {errors.account && <p className="text-sm text-red-500">{errors.account}</p>}
@@ -113,7 +119,7 @@ function Login(): JSX.Element {
                     type="password"
                     placeholder="password"
                     onChange={handleChange('password')}
-                    onBlur={handleBlur('password')}
+                    onBlur={handleValidate('password')}
                     className="input-form"
                   />
                   {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
@@ -122,10 +128,10 @@ function Login(): JSX.Element {
               <div className="text-sm text-gray-500 text-right">Forgor password ?</div>
             </div>
             <button
-              className={`btn-form ${
-                (Object.keys(errors).length > 0 && 'cursor-not-allowed opacity-50') ||
-                'cursor-pointer'
+              className={`btn-form  bg-indigo-500 hover:enabled:bg-indigo-400 cursor-pointer ${
+                (Object.keys(errors).length > 0 && 'disabled:opacity-75 cursor-not-allowed') || ''
               }`}
+              disabled={Object.keys(errors).length > 0 && true}
             >
               Login
             </button>

@@ -4,11 +4,7 @@ import './App.css';
 import AuthenticationProvider from './Context/Authentication.Context';
 import Routes from './Routes';
 function App() {
-  return (
-    <AuthenticationProvider>
-      <Routes />
-    </AuthenticationProvider>
-  );
+  return <Routes />;
 }
 
 export default App;

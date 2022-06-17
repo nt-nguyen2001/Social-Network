@@ -37,35 +37,34 @@ const inputArray: Input[] = [
 function Register(): JSX.Element {
   const [themeMode, toggleDarkMode] = useDarkMode();
   const navigate = useNavigate();
-  const { data, handleChange, handleBlur, errors, setErrors, handleCheckEmpty } =
-    useFormValidation<User>({
-      validations: {},
-      initial: {
-        userName: '',
-        password: '',
-        account: '',
-        phoneNumber: '',
-      },
-    });
+  const { data, handleChange, handleValidate, errors, setErrors } = useFormValidation<User>({
+    validations: {},
+    initial: {
+      userName: '',
+      password: '',
+      account: '',
+      phoneNumber: '',
+    },
+  });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (handleCheckEmpty() !== false) {
-      registerAPI(data).then((res) => {
-        switch (res?.status) {
-          case 200:
-            navigate('/login', {
-              state: {
-                success: true,
-              },
-            });
-            break;
-          case 500:
-            toast.error('Server error, try later', config);
-            break;
-        }
-      });
-    }
+    // if (handleCheckEmpty() !== false) {
+    //   registerAPI(data).then((res) => {
+    //     switch (res?.status) {
+    //       case 200:
+    //         navigate('/login', {
+    //           state: {
+    //             success: true,
+    //           },
+    //         });
+    //         break;
+    //       case 500:
+    //         toast.error('Server error, try later', config);
+    //         break;
+    //     }
+    //   });
+    // }
   };
 
   return (
@@ -101,7 +100,7 @@ function Register(): JSX.Element {
                       <input
                         {...value}
                         onChange={handleChange(value.key as keyof User)}
-                        onBlur={handleBlur(value.key as keyof User)}
+                        onBlur={handleValidate(value.key as keyof User)}
                         className="input-form"
                       />
                       {errors[value.key as keyof User] && (

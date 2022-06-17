@@ -8,6 +8,7 @@ const root = createRoot(container!);
 root.render(
   <BrowserRouter>
     <App />
+    <div id="loading"></div>
   </BrowserRouter>
 );
 

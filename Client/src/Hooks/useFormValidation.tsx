@@ -17,43 +17,44 @@ function useFormValidation<T extends Record<keyof T, any>>({
       [key]: e.target.value,
     });
   };
-  const validate = useCallback((validation: any, value: any, newErrors: any, key: any) => {
-    if (validation?.required?.value && !value) {
-      newErrors[key] = validation?.required?.message;
-    }
-    const pattern = validation?.pattern;
-    if (pattern?.value && !RegExp(pattern.value).test(value)) {
-      newErrors[key] = pattern.message;
-    }
-    const custom = validation?.custom;
-    if (custom?.isValid && !custom.isValid(value)) {
-      newErrors[key] = custom.message;
-    }
-  }, []);
-  const handleBlur = (key: keyof T) => () => {
-    const newErrors: Partial<Record<keyof T, string>> = { ...errors };
-    const value = data[key];
-    const validation = validations[key];
-    delete newErrors[key];
-    validate(validation, value, newErrors, key);
-    setErrors(newErrors);
-  };
+  const validate = useCallback(
+    (validation: any, value: string, newErrors: Partial<Record<keyof T, string>>, key: keyof T) => {
+      if (validation?.required?.value && !value) {
+        newErrors[key] = validation?.required?.message;
+      }
+      const pattern = validation?.pattern;
+      if (pattern?.value && !RegExp(pattern.value).test(value)) {
+        newErrors[key] = pattern.message;
+      }
+      const custom = validation?.custom;
+      if (custom?.isValid && !custom.isValid(value)) {
+        newErrors[key] = custom.message;
+      }
+    },
+    []
+  ); // ?
+  const handleValidate = (key?: keyof T) => (): boolean => {
+    const newErrors: Partial<Record<keyof T, string>> = (key && { ...errors }) || {};
 
-  const handleCheckEmpty = () => {
-    const newErrors: Partial<Record<keyof T, string>> = {};
-    for (const key in data) {
+    if (key) {
       const value = data[key];
       const validation = validations[key];
+      delete newErrors[key];
       validate(validation, value, newErrors, key);
+    } else {
+      for (const key in data) {
+        const value = data[key];
+        const validation = validations[key];
+        validate(validation, value, newErrors, key);
+      }
     }
+
     setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) {
-      return false;
-    }
-    return true;
+
+    return Object.keys(errors).length <= 0;
   };
 
-  return { data, handleChange, errors, setErrors, handleBlur, handleCheckEmpty };
+  return { data, handleChange, errors, setErrors, handleValidate };
 }
 
 export default useFormValidation;

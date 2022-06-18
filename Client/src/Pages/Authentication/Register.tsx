@@ -2,7 +2,7 @@ import React, { FormEvent } from 'react';
 import { BsFillSunFill, BsMoonStarsFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { registerAPI } from '../../Api/Authentication.api';
+import { RefreshToken, registerAPI } from '../../Api/Authentication.api';
 import useDarkMode from '../../Hooks/useDarkMode';
 import useFormValidation from '../../Hooks/useFormValidation';
 import { Input, User } from '../../Models';
@@ -49,27 +49,40 @@ function Register(): JSX.Element {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // if (handleCheckEmpty() !== false) {
-    //   registerAPI(data).then((res) => {
-    //     switch (res?.status) {
-    //       case 200:
-    //         navigate('/login', {
-    //           state: {
-    //             success: true,
-    //           },
-    //         });
-    //         break;
-    //       case 500:
-    //         toast.error('Server error, try later', config);
-    //         break;
-    //     }
-    //   });
-    // }
+    if (handleValidate()() === true) {
+      registerAPI(data).then((res) => {
+        switch (res?.status) {
+          case 200:
+            // navigate('/login', {
+            //   state: {
+            //     success: true,
+            //   },
+            // });
+            break;
+          case 500:
+            toast.error('Server error, try later', config);
+            break;
+        }
+      });
+    }
   };
 
   return (
-    <section className="pt-4 h-full overflow-hidden text-dark">
+    <section
+      className={`pt-4 h-full overflow-hidden text-dark ${
+        (themeMode.isTransition && 'transition duration-500') || ''
+      }`}
+    >
       <section className="font-Poppins mt-4 mb-14 mx-4 md:mx-8 xl:mx-44 lg:flex lg:h-screen ">
+        <button
+          onClick={() =>
+            RefreshToken()
+              .then((res) => res.json())
+              .then((message) => console.log(message))
+          }
+        >
+          refresh
+        </button>
         <div className="flex justify-between gap-4">
           <div className="font-semibold text-lg ">Your Logo</div>
           <div>

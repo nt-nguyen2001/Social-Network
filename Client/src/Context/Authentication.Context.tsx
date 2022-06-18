@@ -28,6 +28,9 @@ export default function AuthenticationProvider({ children }: { children: JSX.Ele
         } else {
           setIsLogin(true);
         }
+      })
+      .catch((err) => {
+        console.log('🚀 ~ file: Authentication.Context.tsx ~ line 33 ~ useEffect ~ err', err);
       });
   }, []);
   return (

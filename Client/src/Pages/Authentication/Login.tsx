@@ -8,7 +8,7 @@ import useDarkMode from '../../Hooks/useDarkMode';
 import useFormValidation from '../../Hooks/useFormValidation';
 import { User } from '../../Models';
 import { config } from '../../Utils/toast.config';
-import LoadingTop from '../Loading/Top';
+import LoadingProgress from '../Loading/Progress';
 import Bottom from './Bottom';
 import Header from './Header';
 
@@ -39,21 +39,28 @@ function Login(): JSX.Element {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (handleValidate()() === true) {
-      // loginAPI(data)
-      //   .then((res) => res?.json())
-      //   .then((res) => {
-      //     switch (res?.message) {
-      //       case 'Bad Request':
-      //         toast.error('The user name or password is incorrect', config);
-      //         break;
-      //       case 'Expired':
-      //         RefreshToken();
-      //         break;
-      //     }
-      //   });
-      console.log('?');
       setIsLoading(true);
+      loginAPI(data)
+        .then((res) => res?.json())
+        .then((res) => {
+          switch (res?.message) {
+            case 'Bad Request':
+              toast.error('The user name or password is incorrect', config);
+              break;
+            case 'Expired':
+              RefreshToken();
+              break;
+          }
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log('🚀 ~ file: Login.tsx ~ line 55 ~ handleSubmit ~ err', err);
+        });
     }
+  };
+
+  const handleLoading = (state: boolean) => {
+    setIsLoading(state);
   };
 
   useEffect(() => {
@@ -77,8 +84,7 @@ function Login(): JSX.Element {
         (themeMode.isTransition && 'transition duration-500') || ''
       }`}
     >
-      {/* {isLoading && <LoadingTop />} */}
-      <LoadingTop />
+      {isLoading && <LoadingProgress handleLoading={handleLoading} />}
       <section className="font-Poppins pb-12 mx-4 md:mx-8 xl:mx-44 lg:flex lg:h-screen ">
         <div className="flex justify-between gap-4">
           <div className="font-semibold text-lg">Your Logo</div>

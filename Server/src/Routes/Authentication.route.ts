@@ -1,8 +1,14 @@
 import { Router } from "express";
-import { login, register } from "../Controllers/Authentication.controller";
-import { verifyToken } from "../Middleware/VerifyToken";
+import {
+  login,
+  refreshToken,
+  register,
+} from "../Controllers/Authentication.controller";
 
 const router = Router();
 
-router.post("/api/login", login).post("/api/register", register);
+router
+  .get("/api/auth/refreshToken", refreshToken)
+  .post("/api/auth/login", login)
+  .post("/api/auth/register", register);
 export default router;

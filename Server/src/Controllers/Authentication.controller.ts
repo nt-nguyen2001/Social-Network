@@ -1,46 +1,71 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 import { User } from "../Types/User.interface";
+import VerifyToken from "../Utils/VerifyToken.Utils";
 
 export async function login(req: Request, res: Response) {
   const { account, password }: User = req.body.payload || {
     account: "",
     password: "",
   };
-
-  res.sendStatus(400);
+  res.status(401).send({ message: "Bad Request" });
 }
-
+const refreshTokens: Array<String> = [];
 export async function register(req: Request, res: Response) {
   const payload: User = req.body.payload;
-  console.log(payload); // fix
-  const accessToken = await generateToken(payload, { expiresIn: "8h" });
-  const refreshToken = await generateToken(payload, { expiresIn: "1d" });
+
+  const accessToken = await generateToken(
+    { id: uuidv4() },
+    { expiresIn: "3h" }
+  );
+  const refreshToken = await generateToken(
+    { id: uuidv4() },
+    { expiresIn: "1d" }
+  );
+  refreshTokens.push(refreshToken);
   res
     .cookie("accessToken", "Bearer " + accessToken, {
-      expires: new Date(Date.now() + 8 * 3600000),
+      expires: new Date(Date.now() + 3 * 3600000),
       httpOnly: true,
     })
+
     .cookie("refreshToken", "Bearer " + refreshToken, {
       expires: new Date(Date.now() + 24 * 3600000),
       httpOnly: true,
     })
-    .sendStatus(200);
+    .status(200)
+    .send({ message: "OK" });
 }
 
-export function refreshToken(req: Request, res: Response) {
-  const user: User = req.body.payload;
-  console.log(user);
-  res.sendStatus(200);
+export async function refreshToken(req: Request, res: Response) {
+  const refreshToken =
+    (req.cookies?.refreshToken && req.cookies?.refreshToken.split(" ")[1]) ||
+    "";
+  VerifyToken(refreshToken)
+    .then((payload) => {
+      if (refreshTokens.includes(refreshToken)) {
+        res.status(payload.error).send({ message: payload.message });
+      } else {
+        res.status(400).send({ message: "Refresh token doesn't exist!" });
+      }
+    })
+    .catch((err) => {
+      console.log(
+        "🚀 ~ file: Authentication.controller.ts ~ line 66 ~ refreshToken ~ err",
+        err
+      );
+      res.status(err.error).send({ message: err.message });
+    });
 }
 
 function generateToken(payload: object, option: jwt.SignOptions) {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     jwt.sign(payload, process.env.SECRET_KEY || "ASD", option, (err, token) => {
       if (err) {
         reject(err);
       }
-      resolve(token);
+      resolve(token || "");
     });
   });
 }

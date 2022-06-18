@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RefreshToken } from '../Api/Authentication.api';
 import { getUser } from '../Api/User.api';
+import { FetchResponse } from '../Models';
 
 interface LoginContext {
   isLogin: boolean;
@@ -16,22 +18,20 @@ export default function AuthenticationProvider({ children }: { children: JSX.Ele
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
-    getUser()
-      .then((type) => {
-        if (type?.status === 200) {
-          return type?.json();
-        } else return 400;
-      })
-      .then((data) => {
-        if (data === 400) {
-          navigate('/Login');
+    (async () => {
+      try {
+        const res = await getUser();
+        const data: FetchResponse = await res.json();
+        console.log(data);
+        if (data.error === 400 && data.message === 'jwt expired') {
+          RefreshToken();
         } else {
-          setIsLogin(true);
+          navigate('/Login');
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         console.log('🚀 ~ file: Authentication.Context.tsx ~ line 33 ~ useEffect ~ err', err);
-      });
+      }
+    })();
   }, []);
   return (
     <AuthenticationContext.Provider value={{ isLogin }}>{children}</AuthenticationContext.Provider>

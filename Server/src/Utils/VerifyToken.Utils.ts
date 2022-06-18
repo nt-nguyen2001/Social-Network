@@ -1,20 +1,28 @@
-import jwt, { JwtPayload, TokenExpiredError } from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
+
+interface payLoad {
+  id: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
+
 export default async function VerifyToken(token: string) {
   let payload: {
     error: number;
     message: string;
-    decoded?: JwtPayload;
+    decoded?: payLoad;
   };
   try {
     // type can't determined in callback of verify
-    const decode = (await jwt.verify(
+    const decoded = (await jwt.verify(
       token,
       process.env.SECRET_KEY || "ASD"
-    )) as JwtPayload;
+    )) as payLoad;
     payload = {
       error: 200,
       message: "OK",
-      decoded: decode,
+      decoded,
     };
   } catch (err) {
     const tokenError = err as TokenExpiredError;

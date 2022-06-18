@@ -17,6 +17,13 @@ export interface User {
 //   totalPages: number;
 // }
 
+export interface FetchResponse {
+  data: [];
+  totalPages?: number;
+  error: number;
+  message: string;
+}
+
 export interface Validation {
   required?: {
     value: boolean;

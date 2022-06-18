@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../Types/User.interface";
@@ -16,11 +16,11 @@ export async function register(req: Request, res: Response) {
   const payload: User = req.body.payload;
 
   const accessToken = await generateToken(
-    { id: uuidv4() },
+    { id: uuidv4(), role: "0" },
     { expiresIn: "3h" }
   );
   const refreshToken = await generateToken(
-    { id: uuidv4() },
+    { id: uuidv4(), role: "0" },
     { expiresIn: "1d" }
   );
   refreshTokens.push(refreshToken);
@@ -38,14 +38,20 @@ export async function register(req: Request, res: Response) {
     .send({ message: "OK" });
 }
 
-export async function refreshToken(req: Request, res: Response) {
+export async function refreshToken(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  console.log("?");
   const refreshToken =
     (req.cookies?.refreshToken && req.cookies?.refreshToken.split(" ")[1]) ||
-    "";
+    "a";
   VerifyToken(refreshToken)
     .then((payload) => {
       if (refreshTokens.includes(refreshToken)) {
-        res.status(payload.error).send({ message: payload.message });
+        // res.status(payload.error).send({ message: payload.message });
+        next();
       } else {
         res.status(400).send({ message: "Refresh token doesn't exist!" });
       }

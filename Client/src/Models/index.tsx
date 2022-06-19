@@ -20,7 +20,7 @@ export interface User {
 export interface FetchResponse {
   data: [];
   totalPages?: number;
-  error: number;
+  status: number;
   message: string;
 }
 

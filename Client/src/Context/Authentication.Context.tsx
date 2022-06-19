@@ -22,12 +22,15 @@ export default function AuthenticationProvider({ children }: { children: JSX.Ele
       try {
         const res = await getUser();
         const data: FetchResponse = await res.json();
-        console.log(data);
-        if (data.error === 400 && data.message === 'jwt expired') {
-          RefreshToken();
-        } else {
-          navigate('/Login');
+        if (data.status === 400 && data.message === 'jwt expired') {
+          const responseRefreshToken = await RefreshToken();
+          const dataRefreshToken: FetchResponse = await responseRefreshToken.json();
+          if (dataRefreshToken.status === 200) {
+            setIsLogin(true);
+            return;
+          }
         }
+        navigate('/Login');
       } catch (err) {
         console.log('🚀 ~ file: Authentication.Context.tsx ~ line 33 ~ useEffect ~ err', err);
       }

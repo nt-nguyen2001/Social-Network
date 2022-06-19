@@ -1,12 +1,22 @@
 import { NextFunction, Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
 import generateToken from "../Utils/GenerateToken.Utils";
 
 async function assignToken(req: Request, res: Response, next: NextFunction) {
-  const accessToken = await generateToken({ id: uuidv4() }, { expiresIn: 2 });
+  const accessToken = await generateToken(
+    {
+      id: "1",
+      role: "0",
+    },
+    { expiresIn: "3h" }
+  );
   const refreshToken = await generateToken(
-    { id: uuidv4() },
-    { expiresIn: "1d" }
+    {
+      id: "1",
+      role: "0",
+    },
+    {
+      expiresIn: "1d",
+    }
   );
   res
     .cookie("accessToken", "Bearer " + accessToken, {
@@ -19,7 +29,7 @@ async function assignToken(req: Request, res: Response, next: NextFunction) {
       httpOnly: true,
     })
     .status(200)
-    .send({ message: "OK" });
+    .send({ status: 200, message: "OK" });
 }
 
 export default assignToken;

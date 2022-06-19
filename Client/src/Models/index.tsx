@@ -12,6 +12,12 @@ export interface User {
   phoneNumber: string;
 }
 
+export enum LoadingState {
+  loading,
+  pending,
+  error,
+}
+
 // export interface FetchResponse<T> {
 //   data: T[];
 //   totalPages: number;

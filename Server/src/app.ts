@@ -1,8 +1,8 @@
 import express, { Application, Request, Response } from "express";
 import { route } from "./Routes";
-import dotenv from "dotenv";
+// require("dotenv").config({ path: __dirname + "/.env" });
+import "dotenv/config";
 const cors = require("cors");
-dotenv.config({ path: __dirname + "/.env" });
 const app: Application = express();
 const cookieParser = require("cookie-parser");
 
@@ -17,6 +17,6 @@ app.use(
 
 route(app);
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log(`App listening on port ${process.env.PORT || 5000}`);
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`App listening on port ${process.env.PORT || 3000}`);
 });

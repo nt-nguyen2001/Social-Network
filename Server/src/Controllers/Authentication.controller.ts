@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import { User } from "../Types/User.interface";
+import { RequestWithPayload, User } from "../Types/User.interface";
 import VerifyToken from "../Utils/VerifyToken.Utils";
 
 export async function login(req: Request, res: Response) {
@@ -10,9 +10,7 @@ export async function login(req: Request, res: Response) {
   };
   res.status(401).send({ status: 400, message: "Bad Request" });
 }
-interface RequestWithPayload extends Request {
-  payload?: any;
-}
+
 export async function register(
   req: RequestWithPayload,
   res: Response,

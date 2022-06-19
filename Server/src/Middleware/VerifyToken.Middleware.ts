@@ -19,7 +19,7 @@ export const verifyToken =
         })
         .catch((err) => {
           console.log(
-            "🚀 ~ file: VerifyToken.Middleware.ts ~ line 17 ~ err",
+            "🚀 ~ file: VerifyToken.Middleware.ts ~ line 21 ~ err",
             err
           );
           res.status(err.error).send({ status: 400, message: err.message });

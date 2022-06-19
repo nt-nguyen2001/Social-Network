@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from "express";
+import { RequestWithPayload } from "../Types/User.interface";
 import generateToken from "../Utils/GenerateToken.Utils";
 
-async function assignToken(req: Request, res: Response, next: NextFunction) {
-  const accessToken = await generateToken(
-    {
-      id: "1",
-      role: "0",
-    },
-    { expiresIn: "3h" }
-  );
+async function assignToken(
+  req: RequestWithPayload,
+  res: Response,
+  next: NextFunction
+) {
+  const accessToken = await generateToken(req.payload, { expiresIn: "3h" });
   const refreshToken = await generateToken(
     {
       id: "1",

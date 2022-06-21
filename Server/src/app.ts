@@ -1,6 +1,5 @@
 import express, { Application, Request, Response } from "express";
 import { route } from "./Routes";
-// require("dotenv").config({ path: __dirname + "/.env" });
 import "dotenv/config";
 const cors = require("cors");
 const app: Application = express();

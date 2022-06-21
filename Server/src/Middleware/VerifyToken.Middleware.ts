@@ -7,7 +7,7 @@ export const verifyToken =
       (req.cookies.accessToken && req.cookies.accessToken.split(" ")[1]) ||
       null;
     if (token === null) {
-      res.status(400).send({ message: "Not Logged In" });
+      res.status(400).send({ status: 400, message: "Not Logged In" });
     } else {
       VerifyToken(token)
         .then((payload) => {

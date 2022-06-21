@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import { RequestWithPayload, User } from "../Types/User.interface";
+import { DB } from "../Database";
+import { OTP, RequestWithPayload, User } from "../Types";
+import TCWrapper from "../Utils/TCWrapper.Utils";
 import VerifyToken from "../Utils/VerifyToken.Utils";
 
 export async function login(req: Request, res: Response) {
@@ -11,21 +13,39 @@ export async function login(req: Request, res: Response) {
   res.status(401).send({ status: 400, message: "Bad Request" });
 }
 
-export async function register(
-  req: RequestWithPayload,
-  res: Response,
-  next: NextFunction
-) {
-  const payload: User = req.body.payload;
-  req.payload = {
-    id: uuidv4(),
-    role: "0",
-  };
-  next();
+interface UserRegister extends User {
+  otp?: string;
+}
+
+export async function register(req: RequestWithPayload, res: Response) {
+  const payload: UserRegister = req.body.payload;
+  const __instance = DB.getInstance();
+  TCWrapper(async () => {
+    await __instance
+      ._execute<OTP>("Select * From otp where _account = ? and token = ? ", [
+        payload.account,
+        payload.otp,
+      ])
+      .then(async (rows) => {
+        if (
+          rows.length >= 1 &&
+          new Date(rows[0]._expire).getTime() > new Date().getTime()
+        ) {
+          await __instance._execute("Insert into user values(?,?,?,?,?)", [
+            uuidv4(),
+            payload.account,
+            payload.userName,
+            payload.password,
+            payload.phoneNumber,
+          ]);
+          res.status(200).send({ status: 200, message: "OK" });
+        }
+      });
+  }, res);
 }
 
 export async function refreshToken(
-  req: Request,
+  req: RequestWithPayload,
   res: Response,
   next: NextFunction
 ) {
@@ -34,14 +54,11 @@ export async function refreshToken(
     "a";
   VerifyToken(refreshToken)
     .then((payload) => {
+      req.payload = {
+        id: payload.decoded?.id,
+        role: payload.decoded?.role,
+      };
       next();
-      // if (refreshTokens.includes(refreshToken)) {
-      //delete old token
-      //   // res.status(payload.error).send({ message: payload.message });
-      //   next();
-      // } else {
-      //   res.status(400).send({ message: "Refresh token doesn't exist!" });
-      // }
     })
     .catch((err) => {
       console.log(

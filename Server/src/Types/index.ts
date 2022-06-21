@@ -10,3 +10,8 @@ export interface User {
 export interface RequestWithPayload extends Request {
   payload?: any;
 }
+export interface OTP {
+  token: string;
+  _account: string;
+  _expire: Date;
+}

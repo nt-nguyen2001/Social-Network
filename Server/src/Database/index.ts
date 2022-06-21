@@ -1,4 +1,10 @@
-import mysql, { Pool } from "mysql2";
+import mysql, {
+  FieldPacket,
+  Pool,
+  PoolConnection,
+  RowDataPacket,
+} from "mysql2";
+
 export class DB {
   private static __instance: DB;
   private pool: Pool = mysql.createPool({
@@ -15,15 +21,19 @@ export class DB {
     }
     return this.__instance;
   }
-
-  public _execute(query: string, values?: any) {
-    return new Promise((resolve, reject) => {
-      this.pool.execute(query, values ?? [], (err, rows) => {
-        if (err) {
-          reject(err);
+  public _execute<T>(query: string, values?: any) {
+    return new Promise<T[]>((resolve, reject) => {
+      this.pool.execute<T[] & RowDataPacket[]>(
+        query,
+        values ?? [],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          }
+          const row = rows;
+          resolve(row);
         }
-        resolve(rows);
-      });
+      );
     });
   }
 }

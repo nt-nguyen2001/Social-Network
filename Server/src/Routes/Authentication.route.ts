@@ -10,6 +10,6 @@ const router = Router();
 
 router
   .get("/api/auth/refreshToken", refreshToken, assignToken)
-  .post("/api/auth/login", login)
-  .post("/api/auth/register", register, assignToken);
+  .post("/api/auth/login", login, assignToken)
+  .post("/api/auth/register", register);
 export default router;

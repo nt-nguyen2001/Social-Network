@@ -22,7 +22,7 @@ export default function AuthenticationProvider({ children }: { children: JSX.Ele
       try {
         const res = await getUser();
         const data: FetchResponse = await res.json();
-        if (data.status === 400 && data.message === 'jwt expired') {
+        if (data.status === 400) {
           const responseRefreshToken = await RefreshToken();
           const dataRefreshToken: FetchResponse = await responseRefreshToken.json();
           if (dataRefreshToken.status === 200) {

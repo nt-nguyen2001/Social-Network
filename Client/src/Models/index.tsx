@@ -14,7 +14,7 @@ export interface User {
 
 export enum LoadingState {
   loading,
-  pending,
+  finished,
   error,
 }
 
@@ -24,7 +24,7 @@ export enum LoadingState {
 // }
 
 export interface FetchResponse {
-  data: [];
+  rows: [];
   totalPages?: number;
   status: number;
   message: string;
@@ -36,7 +36,7 @@ export interface Validation {
     message: string;
   };
   pattern?: {
-    value: string;
+    value: RegExp;
     message: string;
   };
   custom?: {

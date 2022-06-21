@@ -4,6 +4,8 @@ import { verifyToken } from "../Middleware/VerifyToken.Middleware";
 
 const router = Router();
 
-router.post("/api/users", verifyToken("0"), getUser);
+router
+  .get("/api/users/:account", getUser)
+  .post("/api/users", verifyToken("0"), getUser);
 
 export default router;

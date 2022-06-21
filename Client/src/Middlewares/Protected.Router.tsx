@@ -8,7 +8,7 @@ export function ProtectedRouter({ children }: { children: JSX.Element }) {
 
   useEffect(() => {
     if (isLogin) {
-      setIsAllowed(LoadingState.pending);
+      setIsAllowed(LoadingState.finished);
     }
   }, [isLogin]);
   if (isAllowed === LoadingState.loading) {

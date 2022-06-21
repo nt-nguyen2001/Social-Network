@@ -3,7 +3,6 @@ import { BsFillSunFill, BsMoonStarsFill } from 'react-icons/bs';
 import { useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { loginAPI, RefreshToken } from '../../Api/Authentication.api';
-import { getUser } from '../../Api/User.api';
 import useDarkMode from '../../Hooks/useDarkMode';
 import useFormValidation from '../../Hooks/useFormValidation';
 import { User } from '../../Models';
@@ -36,6 +35,7 @@ function Login(): JSX.Element {
   });
   const { state } = useLocation() as { state: { success?: boolean } };
   const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (handleValidate()() === true) {
@@ -48,7 +48,7 @@ function Login(): JSX.Element {
               toast.error('The user name or password is incorrect', config);
               break;
             case 'Expired':
-              RefreshToken();
+              RefreshToken(); // fix
               break;
           }
           setIsLoading(false);
@@ -134,8 +134,8 @@ function Login(): JSX.Element {
               <div className="text-sm text-gray-500 text-right">Forgor password ?</div>
             </div>
             <button
-              className={`btn-form  bg-indigo-500 hover:enabled:bg-indigo-400 cursor-pointer ${
-                (Object.keys(errors).length > 0 && 'disabled:opacity-75 cursor-not-allowed') || ''
+              className={`btn-form ${
+                (Object.keys(errors).length > 0 && 'cursor-not-allowed opacity-50') || ''
               }`}
               disabled={Object.keys(errors).length > 0 && true}
             >

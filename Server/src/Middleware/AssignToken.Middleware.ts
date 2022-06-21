@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { RequestWithPayload } from "../Types/User.interface";
+import { RequestWithPayload } from "../Types";
 import generateToken from "../Utils/GenerateToken.Utils";
 
 async function assignToken(
@@ -8,21 +8,14 @@ async function assignToken(
   next: NextFunction
 ) {
   const accessToken = await generateToken(req.payload, { expiresIn: "3h" });
-  const refreshToken = await generateToken(
-    {
-      id: "1",
-      role: "0",
-    },
-    {
-      expiresIn: "1d",
-    }
-  );
+  const refreshToken = await generateToken(req.payload, {
+    expiresIn: "1d",
+  });
   res
     .cookie("accessToken", "Bearer " + accessToken, {
       expires: new Date(Date.now() + 3 * 3600000),
       httpOnly: true,
     })
-
     .cookie("refreshToken", "Bearer " + refreshToken, {
       expires: new Date(Date.now() + 24 * 3600000),
       httpOnly: true,

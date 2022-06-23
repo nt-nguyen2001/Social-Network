@@ -44,63 +44,63 @@ function Register(): JSX.Element {
   const { data, handleChange, handleValidate, errors, setErrors } = useFormValidation<UserRegister>(
     {
       validations: {
-        account: {
-          pattern: {
-            value:
-              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            message: "That email address doesn't look right!",
-          },
-          required: {
-            value: true,
-            message: 'Choose a Gmail address',
-          },
-        },
-        userName: {
-          required: {
-            value: true,
-            message: 'Enter a user name',
-          },
-        },
-        phoneNumber: {
-          required: {
-            value: true,
-            message: 'Enter a phone number',
-          },
-          pattern: {
-            value: /^\d*$/,
-            message: 'Only number',
-          },
-          custom: {
-            isValid(value) {
-              return value.length === 11;
-            },
-            message: 'Password only has 11 digits',
-          },
-        },
-        password: {
-          required: {
-            value: true,
-            message: 'Enter a password',
-          },
-          custom: {
-            isValid(value) {
-              return value.length >= 6;
-            },
-            message: 'Password has at least 6 digits',
-          },
-        },
-        otp: {
-          required: {
-            value: true,
-            message: 'Enter a OTP',
-          },
-          custom: {
-            isValid(value) {
-              return value.length === 6;
-            },
-            message: 'OTP only has 6 digits',
-          },
-        },
+        // account: {
+        //   pattern: {
+        //     value:
+        //       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        //     message: "That email address doesn't look right!",
+        //   },
+        //   required: {
+        //     value: true,
+        //     message: 'Choose a Gmail address',
+        //   },
+        // },
+        // userName: {
+        //   required: {
+        //     value: true,
+        //     message: 'Enter a user name',
+        //   },
+        // },
+        // phoneNumber: {
+        //   required: {
+        //     value: true,
+        //     message: 'Enter a phone number',
+        //   },
+        //   pattern: {
+        //     value: /^\d*$/,
+        //     message: 'Only number',
+        //   },
+        //   custom: {
+        //     isValid(value) {
+        //       return value.length === 11;
+        //     },
+        //     message: 'Password only has 11 digits',
+        //   },
+        // },
+        // password: {
+        //   required: {
+        //     value: true,
+        //     message: 'Enter a password',
+        //   },
+        //   custom: {
+        //     isValid(value) {
+        //       return value.length >= 6;
+        //     },
+        //     message: 'Password has at least 6 digits',
+        //   },
+        // },
+        // otp: {
+        //   required: {
+        //     value: true,
+        //     message: 'Enter a OTP',
+        //   },
+        //   custom: {
+        //     isValid(value) {
+        //       return value.length === 6;
+        //     },
+        //     message: 'OTP only has 6 digits',
+        //   },
+        // },
       },
       initial: {
         userName: '',

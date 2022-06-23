@@ -1,12 +1,17 @@
-import { Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { ResponseError } from "./CustomThrowError.Utils";
 
-async function TCWrapper(fn: Function, res: Response) {
-  try {
-    await fn();
-  } catch (err) {
-    console.log(":::ERR:::", err);
-    res.status(500).json({ status: 503, account: "Service Unavailable." });
-  }
-}
+const TCWrapper =
+  (fn: Function) => async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await fn(req, res, next);
+    } catch (err) {
+      const error = err as ResponseError;
+      console.log(":::ERR:::", error);
+      res
+        .status(error.status || 500)
+        .json({ status: error.status || 500, message: error.message });
+    }
+  };
 
 export default TCWrapper;

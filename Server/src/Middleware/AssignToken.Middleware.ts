@@ -2,11 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { RequestWithPayload } from "../Types";
 import generateToken from "../Utils/GenerateToken.Utils";
 
-async function assignToken(
-  req: RequestWithPayload,
-  res: Response,
-  next: NextFunction
-) {
+async function assignToken(req: RequestWithPayload, res: Response) {
   const accessToken = await generateToken(req.payload, { expiresIn: "3h" });
   const refreshToken = await generateToken(req.payload, {
     expiresIn: "1d",

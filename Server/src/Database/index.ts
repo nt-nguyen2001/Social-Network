@@ -1,9 +1,4 @@
-import mysql, {
-  FieldPacket,
-  Pool,
-  PoolConnection,
-  RowDataPacket,
-} from "mysql2";
+import mysql, { Pool, RowDataPacket } from "mysql2";
 
 export class DB {
   private static __instance: DB;

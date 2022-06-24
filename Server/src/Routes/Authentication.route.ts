@@ -10,7 +10,11 @@ import TCWrapper from "../Utils/TCWrapper.Utils";
 const router = Router();
 
 router
-  .get("/api/auth/refreshToken", refreshToken, assignToken)
-  .post("/api/auth/login", login, assignToken)
+  .get(
+    "/api/auth/refreshToken",
+    TCWrapper(refreshToken),
+    TCWrapper(assignToken)
+  )
+  .post("/api/auth/login", TCWrapper(login), TCWrapper(assignToken))
   .post("/api/auth/register", TCWrapper(register));
 export default router;

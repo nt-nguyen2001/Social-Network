@@ -8,9 +8,10 @@ const TCWrapper =
     } catch (err) {
       const error = err as ResponseError;
       console.log(":::ERR:::", error);
-      res
-        .status(error.status || 500)
-        .json({ status: error.status || 500, message: error.message });
+      res.status(error.status || 500).json({
+        status: error.status || 500,
+        message: (error.status && error.message) || "Internal server error",
+      });
     }
   };
 

@@ -1,7 +1,10 @@
-import { User } from '../Models';
+import { FetchResponse, User } from '../Models';
 
-export function loginAPI(payload: { account: string; password: string }) {
-  return fetch(`${process.env.REACT_APP_URL}/api/auth/login`, {
+export async function loginAPI<T>(payload: {
+  account: string;
+  password: string;
+}): Promise<FetchResponse<T>> {
+  const res = await fetch(`${process.env.REACT_APP_URL}/api/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -11,6 +14,7 @@ export function loginAPI(payload: { account: string; password: string }) {
       payload,
     }),
   });
+  return await res.json();
 }
 export function registerAPI(payload: User) {
   return fetch(`${process.env.REACT_APP_URL}/api/auth/register`, {

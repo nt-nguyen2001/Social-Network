@@ -18,14 +18,18 @@ export enum LoadingState {
   error,
 }
 
+export enum Role {
+  admin,
+  users,
+}
+
 // export interface FetchResponse<T> {
 //   data: T[];
 //   totalPages: number;
 // }
 
-export interface FetchResponse {
-  rows: [];
-  totalPages?: number;
+export interface FetchResponse<T> {
+  payload: T[];
   status: number;
   message: string;
 }

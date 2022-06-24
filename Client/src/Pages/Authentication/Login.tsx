@@ -1,11 +1,12 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { BsFillSunFill, BsMoonStarsFill } from 'react-icons/bs';
 import { useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { loginAPI, RefreshToken } from '../../Api/Authentication.api';
+import { AuthenticationContext } from '../../Context/Authentication.Context';
 import useDarkMode from '../../Hooks/useDarkMode';
 import useFormValidation from '../../Hooks/useFormValidation';
-import { User } from '../../Models';
+import { Role, User } from '../../Models';
 import { config } from '../../Utils/toast.config';
 import LoadingProgress from '../Loading/Progress';
 import Bottom from './Bottom';
@@ -35,20 +36,27 @@ function Login(): JSX.Element {
   });
   const { state } = useLocation() as { state: { success?: boolean } };
   const [isLoading, setIsLoading] = useState(false);
+  const { user, setUser } = useContext(AuthenticationContext);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (handleValidate()() === true) {
       setIsLoading(true);
-      loginAPI(data)
-        .then((res) => res?.json())
+      loginAPI<{ role: Role } & User>(data)
         .then((res) => {
-          switch (res?.message) {
-            case 'Bad Request':
-              toast.error('The user name or password is incorrect', config);
+          console.log(res);
+          switch (res?.status) {
+            case 200:
+              // navigate
+              setUser!({
+                role: res.payload[0].role,
+                userID: res.payload[0].userID,
+                userName: res.payload[0].userName,
+                isLogin: true,
+              });
               break;
-            case 'Expired':
-              RefreshToken(); // fix
+            default:
+              toast.error(res?.message, config);
               break;
           }
           setIsLoading(false);

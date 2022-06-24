@@ -17,7 +17,7 @@ async function assignToken(req: RequestWithPayload, res: Response) {
       httpOnly: true,
     })
     .status(200)
-    .send({ status: 200, message: "OK" });
+    .send({ status: 200, message: "OK", payload: req.payload });
 }
 
 export default assignToken;

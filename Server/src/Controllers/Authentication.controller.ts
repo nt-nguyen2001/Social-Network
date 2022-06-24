@@ -4,13 +4,35 @@ import { OTP, RequestWithPayload, User } from "../Types";
 import VerifyToken from "../Utils/VerifyToken.Utils";
 import { v4 as uuidv4 } from "uuid";
 import { ResponseError } from "../Utils/CustomThrowError.Utils";
+import bcrypt from "bcryptjs";
 
-export async function login(req: Request, res: Response, next: NextFunction) {
-  const { account, password }: User = req.body.payload || {
-    account: "",
-    password: "",
-  };
-  res.status(401).send({ status: 400, message: "Bad Request" });
+export async function login(
+  req: RequestWithPayload,
+  res: Response,
+  next: NextFunction
+) {
+  const { account, password } = req.body?.payload;
+  if (account && password) {
+    const __instance = DB.getInstance();
+    const rows = await __instance._execute<User>(
+      "Select *, _password as password, _userName as userName, _userId as userId From User where _account = ?",
+      [account]
+    );
+    if (rows.length === 1) {
+      const responseCompare = await bcrypt.compare(password, rows[0].password);
+      if (responseCompare) {
+        req.payload = {
+          role: rows[0].role,
+          userName: rows[0].userName,
+          id: rows[0].userID,
+        };
+        return next();
+      }
+    }
+    throw new ResponseError("The user name or password is incorrect!", 401);
+  } else {
+    throw new ResponseError("Payload empty!", 400);
+  }
 }
 
 interface UserRegister extends User {
@@ -29,12 +51,15 @@ export async function register(req: RequestWithPayload, res: Response) {
       rows.length >= 1 &&
       new Date(rows[0]._expire).getTime() > new Date().getTime()
     ) {
-      await __instance._execute("Ins1ert into user values(?,?,?,?,?)", [
+      // console.log(process.env.HASH || 10);
+      const hashPassword = await bcrypt.hash(payload.password, 10);
+      await __instance._execute("Insert into user values(?,?,?,?,?,?)", [
         uuidv4(),
         payload.account,
         payload.userName,
-        payload.password,
+        hashPassword,
         payload.phoneNumber,
+        0,
       ]);
       res.status(200).send({ status: 200, message: "OK" });
     }
@@ -51,19 +76,10 @@ export async function refreshToken(
   const refreshToken =
     (req.cookies?.refreshToken && req.cookies?.refreshToken.split(" ")[1]) ||
     "a";
-  VerifyToken(refreshToken)
-    .then((payload) => {
-      req.payload = {
-        id: payload.decoded?.id,
-        role: payload.decoded?.role,
-      };
-      next();
-    })
-    .catch((err) => {
-      console.log(
-        "🚀 ~ file: Authentication.controller.ts ~ line 66 ~ refreshToken ~ err",
-        err
-      );
-      res.status(err.error).send({ status: 500, message: err.message });
-    });
+  const verifiedToken = await VerifyToken(refreshToken);
+  req.payload = {
+    id: verifiedToken.decoded?.id,
+    role: verifiedToken.decoded?.role,
+  };
+  next();
 }

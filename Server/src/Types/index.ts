@@ -6,6 +6,7 @@ export interface User {
   userName: string;
   password: string;
   phoneNumber: string;
+  role: string;
 }
 export interface RequestWithPayload extends Request {
   payload?: any;

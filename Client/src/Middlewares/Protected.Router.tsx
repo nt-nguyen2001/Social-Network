@@ -1,18 +1,26 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthenticationContext } from '../Context/Authentication.Context';
-import { LoadingState } from '../Models';
+import { LoadingState, Role } from '../Models';
 
-export function ProtectedRouter({ children }: { children: JSX.Element }) {
+export function ProtectedRouter({
+  children,
+  role,
+}: {
+  children: JSX.Element;
+  role?: Role | undefined | null;
+}) {
   const [isAllowed, setIsAllowed] = useState<LoadingState>(LoadingState.loading);
-  const { isLogin } = useContext(AuthenticationContext);
+  const { user } = useContext(AuthenticationContext);
 
   useEffect(() => {
-    if (isLogin) {
-      setIsAllowed(LoadingState.finished);
-    }
-  }, [isLogin]);
+    user.isLogin ?? setIsAllowed(LoadingState.finished);
+  }, [user.isLogin]);
   if (isAllowed === LoadingState.loading) {
     return <div>Loading</div>;
   }
-  return children;
+  if (role === user.role) {
+    console.log('?:D?', role, user.role);
+    return children;
+  }
+  return <div>Navigate</div>;
 }

@@ -12,7 +12,7 @@ export async function getUser(req: Request, res: Response) {
       [req.params.account]
     );
   } else {
-    payload = await __instance._execute("Se1lect * From User");
+    payload = await __instance._execute("Select * From User");
   }
   res.status(200).json({ status: 200, payload });
 }

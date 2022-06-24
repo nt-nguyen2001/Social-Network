@@ -7,14 +7,11 @@ export const verifyToken =
     const token =
       (req.cookies.accessToken && req.cookies.accessToken.split(" ")[1]) ||
       null;
-    if (token === null) {
-      res.status(400).send({ status: 400, message: "Not Logged In" });
-    } else {
+    if (token !== null) {
       const payload = await VerifyToken(token);
-
       if (payload.decoded?.role === role) {
         return next();
       }
-      throw new ResponseError("Bad Request!", 400);
     }
+    throw new ResponseError("Bad Request!", 400);
   };

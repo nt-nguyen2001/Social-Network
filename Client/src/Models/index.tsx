@@ -19,17 +19,13 @@ export enum LoadingState {
 }
 
 export enum Role {
-  admin,
+  no = -1,
   users,
+  admin,
 }
 
-// export interface FetchResponse<T> {
-//   data: T[];
-//   totalPages: number;
-// }
-
 export interface FetchResponse<T> {
-  payload: T[];
+  payload?: T[];
   status: number;
   message: string;
 }

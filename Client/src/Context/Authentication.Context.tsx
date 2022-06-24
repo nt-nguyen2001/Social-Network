@@ -9,10 +9,10 @@ interface LoginContext<T> {
   setUser?: (state: T) => void;
 }
 type UserLogin = {
-  isLogin: boolean | undefined;
-  role: Role | undefined;
-  userID: string;
-  userName: string;
+  isLogin?: boolean;
+  role: Role;
+  userID?: string;
+  userName?: string;
 };
 
 export const AuthenticationContext = createContext<LoginContext<UserLogin>>({
@@ -20,48 +20,54 @@ export const AuthenticationContext = createContext<LoginContext<UserLogin>>({
     isLogin: undefined,
     userID: '',
     userName: '',
-    role: undefined,
+    role: Role.no,
   },
   setUser: (state: UserLogin) => {},
 });
 
 export default function AuthenticationProvider({ children }: { children: JSX.Element }) {
-  // const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState<UserLogin>({
     isLogin: undefined,
     userID: '',
     userName: '',
-    role: undefined,
+    role: Role.no,
   });
-  const navigate = useNavigate();
+
   useEffect(() => {
     (async () => {
       try {
-        const res = await getUser();
-        const data: FetchResponse<{ role: Role } & User> = await res.json();
-        if (data.status === 400) {
+        const res = await getUser<{ role: Role } & User>();
+        if (res.status === 200) {
+          setUser({
+            role: res?.payload?.[0].role || Role.no,
+            userID: res?.payload?.[0].userID,
+            userName: res?.payload?.[0].userName,
+            isLogin: true,
+          });
+          return;
+        }
+        if (res.status === 400) {
           const responseRefreshToken = await RefreshToken();
           const dataRefreshToken: FetchResponse<{ role: Role } & User> =
             await responseRefreshToken.json();
           if (dataRefreshToken.status === 200) {
             setUser({
-              role: dataRefreshToken.payload[0].role,
-              userID: dataRefreshToken.payload[0].userID,
-              userName: dataRefreshToken.payload[0].userName,
+              role: dataRefreshToken?.payload?.[0].role || Role.no,
+              userID: dataRefreshToken?.payload?.[0].userID,
+              userName: dataRefreshToken?.payload?.[0].userName,
               isLogin: true,
             });
             return;
           }
         }
-        setUser({
-          role: data.payload[0].role,
-          userID: data.payload[0].userID,
-          userName: data.payload[0].userName,
-          isLogin: true,
-        });
+        throw 'No Login!';
       } catch (err) {
         console.log('🚀 ~ file: Authentication.Context.tsx ~ line 33 ~ useEffect ~ err', err);
         // navigate to 404
+        setUser({
+          ...user,
+          isLogin: false,
+        });
       }
     })();
   }, []);

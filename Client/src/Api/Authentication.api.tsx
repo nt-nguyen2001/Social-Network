@@ -16,8 +16,8 @@ export async function loginAPI<T>(payload: {
   });
   return await res.json();
 }
-export function registerAPI(payload: User) {
-  return fetch(`${process.env.REACT_APP_URL}/api/auth/register`, {
+export async function registerAPI<T>(payload: User): Promise<FetchResponse<T>> {
+  const res = await fetch(`${process.env.REACT_APP_URL}/api/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,6 +27,7 @@ export function registerAPI(payload: User) {
       payload,
     }),
   });
+  return await res.json();
 }
 
 export function RefreshToken() {

@@ -9,7 +9,7 @@ export interface User {
   role: string;
 }
 export interface RequestWithPayload extends Request {
-  payload?: any;
+  payload?: Object[];
 }
 export interface OTP {
   token: string;

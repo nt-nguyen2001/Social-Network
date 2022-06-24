@@ -1,10 +1,10 @@
 export class ResponseError extends Error {
-  public status: number;
+  public error: number;
   constructor(message: string, status: number = 500) {
     super(message);
 
     Error.captureStackTrace(this);
 
-    this.status = status;
+    this.error = status;
   }
 }

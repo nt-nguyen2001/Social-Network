@@ -3,8 +3,9 @@ import { RequestWithPayload } from "../Types";
 import generateToken from "../Utils/GenerateToken.Utils";
 
 async function assignToken(req: RequestWithPayload, res: Response) {
-  const accessToken = await generateToken(req.payload, { expiresIn: "3h" });
-  const refreshToken = await generateToken(req.payload, {
+  const payload = req?.payload?.[0] || { null: "null" };
+  const accessToken = await generateToken(payload, { expiresIn: "3h" });
+  const refreshToken = await generateToken(payload, {
     expiresIn: "1d",
   });
   res
@@ -16,8 +17,8 @@ async function assignToken(req: RequestWithPayload, res: Response) {
       expires: new Date(Date.now() + 24 * 3600000),
       httpOnly: true,
     })
-    .status(200)
-    .send({ status: 200, message: "OK", payload: req.payload });
+    .sendStatus(200);
+  // .send({ status: 200, message: "OK", payload: req.payload });
 }
 
 export default assignToken;

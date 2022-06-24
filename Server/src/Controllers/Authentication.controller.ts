@@ -21,11 +21,13 @@ export async function login(
     if (rows.length === 1) {
       const responseCompare = await bcrypt.compare(password, rows[0].password);
       if (responseCompare) {
-        req.payload = {
-          role: rows[0].role,
-          userName: rows[0].userName,
-          id: rows[0].userID,
-        };
+        req.payload = [
+          {
+            role: rows[0].role,
+            userName: rows[0].userName,
+            id: rows[0].userID,
+          },
+        ];
         return next();
       }
     }
@@ -77,9 +79,11 @@ export async function refreshToken(
     (req.cookies?.refreshToken && req.cookies?.refreshToken.split(" ")[1]) ||
     "a";
   const verifiedToken = await VerifyToken(refreshToken);
-  req.payload = {
-    id: verifiedToken.decoded?.id,
-    role: verifiedToken.decoded?.role,
-  };
+  req.payload = [
+    {
+      id: verifiedToken.decoded?.id,
+      role: verifiedToken.decoded?.role,
+    },
+  ];
   next();
 }

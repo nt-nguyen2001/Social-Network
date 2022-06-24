@@ -44,14 +44,13 @@ function Login(): JSX.Element {
       setIsLoading(true);
       loginAPI<{ role: Role } & User>(data)
         .then((res) => {
-          console.log(res);
           switch (res?.status) {
             case 200:
               // navigate
               setUser!({
-                role: res.payload[0].role,
-                userID: res.payload[0].userID,
-                userName: res.payload[0].userName,
+                role: res?.payload?.[0].role || Role.no,
+                userID: res?.payload?.[0].userID,
+                userName: res?.payload?.[0].userName,
                 isLogin: true,
               });
               break;

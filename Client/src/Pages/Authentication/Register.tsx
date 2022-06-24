@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { registerAPI } from '../../Api/Authentication.api';
 import { mailRegister } from '../../Api/Mail.api';
+import { getUser } from '../../Api/User.api';
 import useDarkMode from '../../Hooks/useDarkMode';
 import useFormValidation from '../../Hooks/useFormValidation';
 import { FetchResponse, Input, User } from '../../Models';
@@ -113,15 +114,17 @@ function Register(): JSX.Element {
   );
 
   const handleUserExists = (params: string = '') => {
-    fetch(`http://localhost:5000/api/users/${params}`)
-      .then((res) => res.json())
-      .then((data: FetchResponse<User>) => {
-        if (data?.payload?.length > 0) {
+    getUser<User>()
+      .then((data) => {
+        if (data?.payload && data.payload.length > 0) {
           setErrors({
             ...errors,
             account: 'User exists already!',
           });
         }
+      })
+      .catch((err) => {
+        console.log('🚀 ~ file: Register.tsx ~ line 125 ~ .then ~ err', err);
       });
   };
   const handleSubmit = (e: FormEvent) => {
@@ -156,7 +159,7 @@ function Register(): JSX.Element {
           }
           return prev - 1;
         });
-      }, 0);
+      }, 1000);
     }
   };
 

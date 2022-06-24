@@ -1,6 +1,6 @@
 import { useRoutes } from 'react-router-dom';
 import { ProtectedRouter } from '../Middlewares/Protected.Router';
-import { LoadingState, Role } from '../Models';
+import { Role } from '../Models';
 import Login from '../Pages/Authentication/Login';
 import Register from '../Pages/Authentication/Register';
 import BoxMessages from '../Pages/Messages/Box';
@@ -10,26 +10,26 @@ const Routes = () => {
     {
       path: '/Login',
       element: (
-        <ProtectedRouter role={null}>
+        <ProtectedRouter role={Role.no} path={'Home'}>
           <Login />
         </ProtectedRouter>
       ),
     },
     {
       path: '/Register',
-      element: <Register />,
-    },
-    {
-      path: '/Messages',
       element: (
-        <ProtectedRouter role={Role.admin}>
-          <BoxMessages />
+        <ProtectedRouter role={Role.no} path={'Home'}>
+          <Register />
         </ProtectedRouter>
       ),
     },
     {
-      path: '*',
-      element: <Login />,
+      path: '/Messages',
+      element: (
+        <ProtectedRouter role={Role.users}>
+          <BoxMessages />
+        </ProtectedRouter>
+      ),
     },
   ]);
   return routes;

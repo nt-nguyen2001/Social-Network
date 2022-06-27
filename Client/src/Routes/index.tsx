@@ -4,13 +4,14 @@ import { Role } from '../Models';
 import Login from '../Pages/Authentication/Login';
 import Register from '../Pages/Authentication/Register';
 import BoxMessages from '../Pages/Messages/Box';
+import Home from '../Pages/NewsFeed/Home';
 
 const Routes = () => {
   const routes = useRoutes([
     {
       path: '/Login',
       element: (
-        <ProtectedRouter role={Role.no} path={'Home'}>
+        <ProtectedRouter role={Role.no} path={'/Messages'}>
           <Login />
         </ProtectedRouter>
       ),
@@ -30,6 +31,10 @@ const Routes = () => {
           <BoxMessages />
         </ProtectedRouter>
       ),
+    },
+    {
+      path: '*',
+      element: <Home />,
     },
   ]);
   return routes;

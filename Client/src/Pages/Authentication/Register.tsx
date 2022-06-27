@@ -114,7 +114,7 @@ function Register(): JSX.Element {
   );
 
   const handleUserExists = (params: string = '') => {
-    getUser<User>()
+    getUser<User>(params)
       .then((data) => {
         if (data?.payload && data.payload.length > 0) {
           setErrors({

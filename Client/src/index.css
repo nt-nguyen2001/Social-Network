@@ -11,6 +11,12 @@
 .btn-form {
   @apply text-white w-full flex align-middle justify-center bg-[#4D47C3] shadow-lg shadow-[#4D47C3]/50 py-4 rounded-lg hover:enabled:bg-indigo-600 transition-all duration-500;
 }
+.table-chatBox {
+  @apply rounded-lg shadow-[0_4px_5px_2px_rgba(121,197,239,0.38)] py-4 max-h-[calc((100vh/2)-32px-20px)];
+}
+.group-chatBox {
+  @apply flex flex-col gap-5 mt-3 overflow-auto h-[calc(100%-28px)];
+}
 
 body {
   margin: 0;

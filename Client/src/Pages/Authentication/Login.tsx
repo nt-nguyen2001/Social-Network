@@ -1,6 +1,6 @@
 import { FormEvent, useContext, useEffect, useState } from 'react';
 import { BsFillSunFill, BsMoonStarsFill } from 'react-icons/bs';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { loginAPI, RefreshToken } from '../../Api/Authentication.api';
 import { AuthenticationContext } from '../../Context/Authentication.Context';
@@ -37,6 +37,7 @@ function Login(): JSX.Element {
   const { state } = useLocation() as { state: { success?: boolean } };
   const [isLoading, setIsLoading] = useState(false);
   const { user, setUser } = useContext(AuthenticationContext);
+  const navigate = useNavigate();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -46,7 +47,7 @@ function Login(): JSX.Element {
         .then((res) => {
           switch (res?.status) {
             case 200:
-              // navigate
+              navigate('/Messages');
               setUser!({
                 role: res?.payload?.[0].role || Role.no,
                 userID: res?.payload?.[0].userID,

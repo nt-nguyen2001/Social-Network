@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { AuthenticationContext } from '../Context/Authentication.Context';
 import { LoadingState, Role } from '../Models';
 
@@ -13,6 +14,7 @@ export function ProtectedRouter({
 }) {
   const [isAllowed, setIsAllowed] = useState<LoadingState>(LoadingState.loading);
   const { user } = useContext(AuthenticationContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     user.isLogin !== undefined && setIsAllowed(LoadingState.finished);
@@ -24,5 +26,5 @@ export function ProtectedRouter({
   if (role === Number(user.role) && isAllowed === LoadingState.finished) {
     return children;
   }
-  return <div>Navigate {path}</div>;
+  return Navigate({ to: path });
 }

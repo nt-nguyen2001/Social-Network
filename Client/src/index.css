@@ -17,6 +17,12 @@
 .group-chatBox {
   @apply flex flex-col gap-5 mt-3 overflow-auto h-[calc(100%-28px)];
 }
+.icon-header {
+  @apply bg-[#ffffff1a] p-[10px] rounded-full;
+}
+.hover-overlay {
+  @apply cursor-pointer hover:bg-[#ffffff2c] transition-all duration-300;
+}
 
 body {
   margin: 0;

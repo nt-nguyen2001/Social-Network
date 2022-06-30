@@ -16,7 +16,7 @@ function Comment() {
     <div className="w-full pt-3 px-4">
       <CommentInput />
       <div>
-        {arr.map((d, v) => (
+        {/* {arr.map((d, v) => (
           <div>
             <div className="flex py-3">
               <div>
@@ -70,7 +70,7 @@ function Comment() {
               {v + '' === isOpenCommentInput.id && isOpenCommentInput.open && <CommentInput />}
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );

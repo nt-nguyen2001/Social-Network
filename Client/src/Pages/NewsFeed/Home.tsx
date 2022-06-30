@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import { AiOutlineLike } from 'react-icons/ai';
 import { FaRegCommentAlt } from 'react-icons/fa';
 import Header from '../../Components/Header';
+import { WidthDeviceContext } from '../../Context/WidthDevice.Context';
 import Comment from './Comment';
 import Contact from './Contact';
 import SideBar from './SideBar';
@@ -8,15 +10,16 @@ import SideBar from './SideBar';
 const a = [1, 1, 1, 1, 1, 1];
 
 function Home() {
+  const { widthMobile } = useContext(WidthDeviceContext);
   return (
     <>
       <Header />
-      <section className="bg-[#1c1e21] pt-[56px] min-h-screen flex">
-        <SideBar />
-        <div className="flex-1 flex flex-col gap-5 items-center px-5 pt-5">
+      <section className="bg-[#1c1e21] pt-[100px] lg:pt-[56px] min-h-screen flex">
+        {!widthMobile && <SideBar />}
+        <div className="flex-1 flex flex-col gap-5 items-center lg:px-5 lg:pt-5">
           {a.map(() => (
             <>
-              <div className="min-w-[450px] py-4 max-w-[590px] bg-[#242526] text-white rounded-lg">
+              <div className="min-w-[320px] lg:py-4 lg:max-w-[590px] py-3  bg-[#242526] text-white rounded-lg">
                 <div className="px-4 flex gap-3">
                   <div className="h-[40px] w-[40px]">
                     <img
@@ -70,7 +73,7 @@ function Home() {
             </>
           ))}
         </div>
-        <Contact />
+        {!widthMobile && <Contact />}
       </section>
     </>
   );

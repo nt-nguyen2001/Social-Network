@@ -2,10 +2,10 @@ import { useContext } from 'react';
 import { AiOutlineLike } from 'react-icons/ai';
 import { FaRegCommentAlt } from 'react-icons/fa';
 import Header from '../../Components/Header';
+import SideBar from '../../Components/SideBar';
 import { WidthDeviceContext } from '../../Context/WidthDevice.Context';
 import Comment from './Comment';
-import Contact from './Contact';
-import SideBar from './SideBar';
+import Contact from '../../Components/Contact';
 
 const a = [1, 1, 1, 1, 1, 1];
 
@@ -14,7 +14,7 @@ function Home() {
   return (
     <>
       <Header />
-      <section className="bg-[#1c1e21] pt-[100px] lg:pt-[56px] min-h-screen flex">
+      <section className="bg-[#1c1e21] pt-[100px] lg:pt-[56px] lg:pl-[350px] min-h-screen flex">
         {!widthMobile && <SideBar />}
         <div className="flex-1 flex flex-col gap-5 items-center lg:px-5 lg:pt-5">
           {a.map(() => (

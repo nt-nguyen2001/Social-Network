@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import InputSearch from '../../Components/InputSearch';
 import CommentInput from './CommentInput';
 const arr = [1, 2, 3, 4];
 function Comment() {
@@ -16,6 +17,7 @@ function Comment() {
     <div className="w-full pt-3 px-4">
       <CommentInput />
       <div>
+        //#region
         {/* {arr.map((d, v) => (
           <div>
             <div className="flex py-3">
@@ -71,6 +73,7 @@ function Comment() {
             </div>
           </div>
         ))} */}
+        //#endregion
       </div>
     </div>
   );

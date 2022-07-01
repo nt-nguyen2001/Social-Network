@@ -1,13 +1,13 @@
-import { BiSearch } from 'react-icons/bi';
-import { MdAccountCircle } from 'react-icons/md';
+import { memo } from 'react';
+import InputSearch from './InputSearch';
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 1, 1, 1, 1];
 
 function Contact() {
   return (
     <div className="w-[350px] overflow-auto max-h-screen sticky top-[56px]">
       <div className="flex items-center justify-between pt-10 px-4 text-[#B0B3B8]">
-        <p className="font-bold ">Contacts</p>
-        <BiSearch className=" left-3 text-xl" />
+        <p className="font-bold pr-5">Contacts</p>
+        <InputSearch style={{ width: '0' }} detectOutside={true} />
       </div>
       <div className="flex flex-col  pt-10 text-white">
         {arr.map((v, i) => (
@@ -30,4 +30,4 @@ function Contact() {
   );
 }
 
-export default Contact;
+export default memo(Contact);
